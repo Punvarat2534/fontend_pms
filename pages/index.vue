@@ -52,43 +52,34 @@
     <tbody>
     <tr> 
         <th></th>
-        <th></th>
-        <th>เลขหนังสือ</th>
-        <th>ชื่อหนังสือ</th>
-        <th>ผู้แต่ง</th>
-        <th>ปีที่พิมพ์</th>
-        <th>ผู้จัดพิมพ์</th>
+        <th>รหัสคีย์วิชา</th>
+        <th>รหัสวิชา</th>
+        <th>ชื่อวิชา</th>
+        <th>ตอน</th>
+        <th>ผู้สอน</th>
+        <th>วัน</th>
+        <th>เวลา</th>
+        <th>ห้อง</th>
         <th></th>
       </tr>
-      <tr v-for="(book,index) in state.books" :key="book.isbn">
-                    <td style="width:1%;">{{rcodno+index}}</td>
-                    <td style="width:4%;padding:0.2em;"><img v-bind:src="book.image_m" /></td>
-                    <td style="width:5%;">{{book.isbn}}</td>
-                    <td style="width:20%;">{{book.title}}</td>
-                    <td style="width:10%;">{{book.author}}</td>
-                    <td style="width:5%;">{{book.year}}</td>
-                    <td style="width:10%;">{{book.publisher}}</td>
+      <tr v-for="(book,index) in state.books" :key="book.id">
+                    <td style="width:5%;">{{book.id}}</td>
+                    <td style="width:4%;padding:0.2em;">{{book.ae_code}}</td>
+                    <td style="width:5%;">{{book.code}}</td>
+                    <td style="width:20%;">{{book.subject}}</td>
+                    <td style="width:10%;">{{book.sec}}</td>
+                    <td style="width:5%;">{{book.teacher}}</td>
+                    <td style="width:10%;">{{book.dates}}</td>
+                    <td style="width:10%;">{{book.times}}</td>
+                    <td style="width:10%;">{{book.room}}</td>
                     <td style="width:1%;">
-                    <NuxtLink :to="`/book/${book.isbn}`" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-1 mb-1"><font-awesome icon="pencil" style="font-size:12pt;cursor:pointer;" /></NuxtLink>
+                    <NuxtLink :to="`/book/${book.id}`" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-1 mb-1"><font-awesome icon="pencil" style="font-size:12pt;cursor:pointer;" /></NuxtLink>
                     </td>
-            
         </tr>
         </tbody>
     </table>
 
-<center>
-<br>
 
-<b>Page <input type="text" v-model="state.pagestext"  v-on:change="all($event.target.value);" style="width:30px;text-align:center;border:1px solid #999;"> of {{state.rcordcnt}}</b>
-<ul>
-<li class="pagination" v-on:click="all(1)"><b><font-awesome icon="angle-double-left" style="font-size:12pt;cursor:pointer;" /></b></li>
-<li class="pagination" v-on:click="all(state.pages-1)"><b><font-awesome icon="chevron-left" style="font-size:12pt;cursor:pointer;" /></b></li>
-<li class="pagination" v-for="n in Pagination" :class="checkIfpageActive(n)" v-on:click="all(n)">{{ n }}</li>
-<li class="pagination" v-on:click="all(state.pages+1)"><b><font-awesome icon="chevron-right" style="font-size:12pt;cursor:pointer;" /></b></li>
-<li class="pagination" v-on:click="all(state.rcordcnt)"><b><font-awesome icon="angle-double-right" style="font-size:12pt;cursor:pointer;" /></b></li>
-</ul>
-<br>
-</center>
 
 </div>
 </template>
@@ -109,98 +100,29 @@ const state = reactive({
 });
 
 onMounted(() => {
-    fnrcordcnt();
-    all(1);
+    all();
     state.pages = 1;
 });
 
-const rcodno = computed(() => {
-  if(state.page==1){
-      state.no = 0;
-  }else{
-      state.no = (parseInt(state.pages)-1)*10;
-  }  
-  
-  let no = parseInt(state.no)+1;
-  state.no = no;
-  return no;
-});
 
-const Pagination = computed(() => {
-  let arr = [];
-        var start= state.pages-2;
-        var end=  state.pages+2;
-   
-        if(state.pages<=state.rcordcnt){
-          if(state.pages<=3){
-            start=1;
-            end=5;
-          }else if(state.pages > (state.rcordcnt-3) && state.pages <= (state.rcordcnt)){
-            start=state.rcordcnt-4;
-            end=state.rcordcnt;
-          }else{
-            start=state.pages-2;
-            end=parseInt(state.pages)+2;
-          }
-
-          for (var i = start; i <= end; i++)
-            arr.push(i);
-            return arr;
-          }
-});
-
-  
-async function setstate(){
-    state.url_endpoint = await p.url_endpoint();
-    state.tokens = await p.xcrfstokens();
-}
-
-function checkIfpageActive(p) {
-    if ((p == state.pages)|| (p == state.pagestext)) {          
-      return "active";
-    }
-}
-
-async function fnrcordcnt(){
-    var url_endpoint = await p.url_endpoint();
-    const result = await axios.get("http://localhost:5000/pagecount")
-            .then(response => {	
-              state.rcordcnt = parseInt(response.data);
-              return response.data;          
-            })
-            .catch(error => {
-              alert(error);
-            });
-
-            return result;
-}
-
-
-async function all(pgs){
+async function all(){
  
-            const tokens = await p.xcrfstokens();
-            const rcord = await fnrcordcnt();
 
             const config = {
                 headers: {
                 "Content-Type": "multipart/form-data",
-                "Authorization": "Bearer "+tokens
                 },
             };
 
-          
-            if((pgs>0)&&(pgs<=parseInt(state.rcordcnt))){    
-              
-              state.pages=pgs;
-              state.pagestext = pgs;
-              axios.get("http://localhost:5000/all/"+pgs)
+              axios.get("http://localhost:5000/all")
                 .then(response => {	
-                state.books = response.data.data;        
+                state.books = response.data.data;  
+                console.log(response.data.data);      
               }).catch(error => {
                 alert(error);
               });
 
-            }
+         
 }
 
 
