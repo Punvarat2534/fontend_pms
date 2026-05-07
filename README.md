@@ -1,5 +1,7 @@
 
-## npm run dev
+
+## 1.git clone https://github.com/Punvarat2534/fontend_pms
+## 2.เมื่อติดตั้งแล้วให้ทำการ install package เหล่านี้ใน project
 
 ## -----------------------------------------------
 
@@ -13,4 +15,6 @@
 ## npm i vue-helper
 ## npm i @vee-validate/nuxt
 ## npm install yup
-
+## -----------------------------------------------
+## 3.จบแล้ว run ด้วยคำสั่ง 
+## npm run dev
