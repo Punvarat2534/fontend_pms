@@ -1,6 +1,6 @@
 
 
-## 1.git clone https://github.com/Punvarat2534/fontend_pms
+## 1.git clone https://github.com/Punvarat2534/fontend_pms.git 
 ## 2.เมื่อติดตั้งแล้วให้ทำการ install package เหล่านี้ใน project
 
 ## -----------------------------------------------
@@ -18,3 +18,5 @@
 ## -----------------------------------------------
 ## 3.จบแล้ว run ด้วยคำสั่ง 
 ## npm run dev
+## 4.เปิดใน browser 
+## localhost:3000 
